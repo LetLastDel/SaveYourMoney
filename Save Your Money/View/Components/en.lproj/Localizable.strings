@@ -1,0 +1,45 @@
+/* 
+  Localizable.strings
+  Save Your Money
+
+  Created by A.Stelmakh on 1.07.2023.
+  
+*/
+
+"appDesc" = "Welcome to SYM - an application designed to help you manage your finances. With its help, you can easily track your income and expenses, and effectively manage your finances.";
+"selectVal" = "Select primary currency";
+"enter" = "Log In";
+"addCard" = "Add Card";
+"spent" = "Spent:";
+"insertCardName" = "Enter card name";
+"insertBalance" = "Enter card balance";
+"accept" = "Accept";
+"backButton" = "< Back";
+"balanceNow" = "Current Balance";
+"addBalance" = "Enter balance replenishment";
+"deleteCard" = "Delete Card";
+"changeMainVal" = "Change primary currency";
+"addCategory" = "Add expense category";
+"delete" = "Delete";
+"alert" = "Attention!";
+"alertText" = "Changing the primary currency will reset the graphs, and all transactions in the archive will be displayed in the card's currency.";
+"cancel" = "Cancel";
+"balance" = "Balance";
+"cardVal" = "In card currency";
+"inMainVal" = "In primary currency";
+"rates" = "Exchange rate at the time of conversion";
+"insertCategory" = "Enter category name";
+"deleteTransaction" = "Delete transaction";
+"add" = "Add";
+"addedBal" = "Top-up";
+"car" = "Car";
+"groceries" = "Groceries";
+"education" = "Education";
+"entertainment" = "Entertainment";
+"repair" = "Repair";
+"garden" = "Garden";
+"cafes" = "Cafes and Restaurants";
+"mobile" = "Mobile";
+"utilities" = "Utilities";
+"logBookMonth" = "Display monthly expenses by categories";
+
