@@ -9,20 +9,23 @@ import SwiftUI
 
 struct LogBookView: View {
     
-    var viewModel = LogBookViewModel()
+    @StateObject var viewModel = LogBookViewModel()
     @Environment(\.presentationMode) var presentationMode
     @State var showAll = false
+    @EnvironmentObject var mainViewModel: MainViewModel
+
     
     var body: some View {
         VStack{
             List {
-                ForEach(DataSource.shared.groupByDate(), id: \.date) { section in
+                ForEach(viewModel.groupedByDate, id: \.date) { section in
                     Section(header:Text("\(viewModel.getMonthh(for: section.date))")) {
                         ForEach(section.items) { item in
                             if !item.hide{
                                 NavigationLink{
                                     TransactionSettingView(viewModel: TransactionSettingModel(transaction: item), transaction: item)
                                         .environmentObject(viewModel)
+                                        .environmentObject(mainViewModel)
                                         .navigationBarBackButtonHidden(true)
                                 } label: {
                                     VStack(alignment: .leading, spacing: 0){
@@ -46,8 +49,8 @@ struct LogBookView: View {
                                             Text(String(format: "%.2f", item.amount))
                                             Text(item.currency)
                                         }
-                                        if item.currency != DataSource.shared.currency{
-                                            Text("\(String(format: "%.2f", (item.amountInmainCurrency))) \(DataSource.shared.currency)")
+                                        if item.currency != viewModel.mainCurrency{
+                                            Text("\(String(format: "%.2f", (item.amountInmainCurrency))) \(viewModel.mainCurrency)")
                                         }
                                     }
                                 }
@@ -62,27 +65,27 @@ struct LogBookView: View {
                     }
                     if showAll{
                         VStack(alignment: .leading){
-                                ForEach(categorySums, id: \.id) { categorySum in
-                                    if categorySum.value != 0 {
-                                        HStack{
-                                            Text("\(categorySum.name.localized) - ")
-                                            Text("\(String(format: "%.2f", (categorySum.value)))")
-                                            Text("\(DataSource.shared.currency)")
-                                        }
+                            ForEach(categorySums, id: \.id) { categorySum in
+                                if categorySum.value != 0 {
+                                    HStack{
+                                        Text("\(categorySum.name.localized) - ")
+                                        Text("\(String(format: "%.2f", (categorySum.value)))")
+                                        Text("\(viewModel.mainCurrency)")
                                     }
                                 }
                             }
+                        }
                     }
                 }
-            }
-            
+                }
             .listStyle(.plain)
+        }
+        .onAppear{
+            viewModel.getTransaction()
+            viewModel.groupByDate()
         }
         .padding(.vertical, 30)
         .font(.custom("Marker Felt", size: 12))
-        .onAppear{
-                DataSource.shared.getTransactions()
-        }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .overlay {
                 Button("backButton".localized){

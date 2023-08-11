@@ -19,7 +19,7 @@ struct SettingView: View {
                 HStack{
                     Text("changeMainVal".localized)
                     Picker("", selection: $viewModel.newCurrency) {
-                        ForEach(DataSource.shared.pickerArray, id: \.self) { item in
+                        ForEach(viewModel.picker, id: \.self) { item in
                             Text(item).tag(item)
                                 .tint(.black)
                         }
@@ -41,11 +41,11 @@ struct SettingView: View {
                 }
                 .modifier(ButtonCustom(width: 310, foregroundColor: .black))
                 List{
-                    ForEach(DataSource.shared.category) { category in
+                    ForEach(viewModel.category) { category in
                         if !category.hide {
                             Text("\(category.category)".localized)
                                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    if DataSource.shared.category.count > 1{
+                                    if viewModel.category.count > 1{
                                         Button("delete".localized) {
                                             RealmService.shared.hideCategory(category, hide: true)
                                             viewModel.getCategory()

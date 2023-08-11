@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Charts
+
 struct MainView: View {
     
     @StateObject var viewModel = MainViewModel()
@@ -19,8 +20,6 @@ struct MainView: View {
     @State var showedSetting = false
 
     @ObservedObject var cards = DataSource.shared
-    @AppStorage(PersistedKeys.firstLoad.rawValue) var firstLoad = true
-    
     
     var body: some View {
         VStack{
@@ -44,21 +43,21 @@ struct MainView: View {
                         NavigationView {AddCardView()}
                             .environmentObject(viewModel)
                     }
-                    ForEach(0 ..< DataSource.shared.card.count, id: \.self) { index in
+                    ForEach(0 ..< viewModel.cards.count, id: \.self) { index in
                         NavigationLink{
-                            CardControlView(viewModel: CardControllViewModel(card: DataSource.shared.card[index]), card: DataSource.shared.card[index])
+                            CardControlView(viewModel: CardControllViewModel(card: viewModel.cards[index]), card: viewModel.cards[index])
                                 .environmentObject(viewModel)
                                 .navigationBarBackButtonHidden(true)
                         } label: {
                             VStack(spacing: 0){
-                                Image(DataSource.shared.card[index].image)
+                                Image(viewModel.cards[index].image)
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 75, height: 75)
                                     .shadow(color: Color("blacked"), radius: 0, x: 6, y: 6)
                                 HStack{
-                                    Text(String(format: "%.2f", DataSource.shared.card[index].balance))
-                                    Text(DataSource.shared.card[index].currency)
+                                    Text(String(format: "%.2f", viewModel.cards[index].balance))
+                                    Text(viewModel.cards[index].currency)
                                 }
                                 .tint(.black)
                                 .fixedSize()
@@ -67,7 +66,7 @@ struct MainView: View {
                     }
                 } .padding()
             }.scrollIndicators(.hidden)
-            Chart(DataSource.shared.categoriesSum, id: \.id) { tran in
+            Chart(viewModel.categoriesSum, id: \.id) { tran in
                 if tran.name != "addedBal"{
                         BarMark(x: .value("money", tran.value), y: .value("category", tran.name), width: 30)
                             .annotation(position: .trailing,content: {
@@ -80,11 +79,11 @@ struct MainView: View {
             }
             .chartXAxis(.hidden)
             .chartYAxis(.hidden)
-            .frame(maxHeight: DataSource.shared.categoriesSum.count <= 4 ? 200 : 400)
+            .frame(maxHeight: viewModel.categoriesSum.count <= 4 ? 200 : 400)
             Spacer()
             HStack{
                 Text("spent".localized)
-                Text("\(String(format: "%.2f" ,DataSource.shared.getTransactionSum))  \(DataSource.shared.currency)")}
+                Text("\(String(format: "%.2f" ,viewModel.transactionSum))  \(DataSource.shared.currency)")}
             .frame(maxWidth: .infinity, alignment: .center)
             .multilineTextAlignment(.leading)
             .onTapGesture {
@@ -131,23 +130,18 @@ struct MainView: View {
             
             
         }
+        .onAppear{
+            viewModel.getTransactions()
+        }
             .font(.custom("Marker Felt", size: 12))
             .foregroundColor(.black)
-            .onAppear{
-                viewModel.getCards()
-                DataSource.shared.getTransactions()
-                if firstLoad{
-                    DataSource.shared.addCategory()
-                    firstLoad = false
-                }
-              //  print(RealmService.shared.config.fileURL)
-                DataSource.shared.getGategory()
-            }
             .frame(maxHeight: .infinity, alignment: .top)
             .background(Color("bgCol"))
             .fullScreenCover(isPresented: $showedLogBook) {
                 NavigationView {
                     LogBookView()
+                        .environmentObject(viewModel)
+
                 }
             }
     }

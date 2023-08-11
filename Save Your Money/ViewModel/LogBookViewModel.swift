@@ -9,11 +9,26 @@ import Foundation
 
 
 class LogBookViewModel: ObservableObject{
-        
-    let today = Date()
-    let calendar = Calendar.current
+    private var dataSource = DataSource.shared
+    private let today = Date()
+    private let calendar = Calendar.current
     
-
+    
+    var transaction: [TransactionModel] = []{
+        didSet{
+            groupByDate()
+        }
+    }
+    @Published var mainCurrency: String = ""
+    @Published var groupedByDate = [(date: Date, items: [TransactionModel])]()
+    
+    init(){
+        getTransaction()
+    //   groupByDate()
+    }
+    func getMainCurrency(){
+        mainCurrency = dataSource.currency
+    }
     func getDate(for date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yy"
@@ -33,6 +48,9 @@ class LogBookViewModel: ObservableObject{
         let str = formatter.string(for: date)
         return str!
     }
+    func getTransaction(){
+        transaction = dataSource.transaction
+    }
     func forLogBook(for section: (date: Date, items: [TransactionModel])) -> [(id: UUID, name: String, value: Double)] {
         let trans = section.items
         let categories = Set(trans.map{$0.category})
@@ -45,6 +63,17 @@ class LogBookViewModel: ObservableObject{
             categoriesSum.append(tuple)
         }
         categoriesSum = categoriesSum.sorted { $0.value < $1.value }
+        print(categoriesSum)
         return categoriesSum
+    }
+    func groupByDate() {
+        let groupedItems = Dictionary(grouping: transaction) { item in
+            Calendar.current.dateComponents([.year, .month], from: item.date)
+        }
+        let sortedGrouper = groupedItems.map { key, value in
+            let date = Calendar.current.date(from: key)!
+            return (date: date, items: value)
+        }.sorted { $0.date > $1.date }
+        self.groupedByDate = sortedGrouper
     }
 }

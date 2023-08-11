@@ -21,9 +21,17 @@ class CardControllViewModel: ObservableObject {
         addTransaction()
     }
     func addTransaction(){
-        let newTransaction = TransactionModel(image: card.image, name: card.name,cardID: card.id, currency: card.currency, category: "addedBal", amount: Double(addBalance)!, amountInmainCurrency: 0, date: Date(), rates: 0, hide: false)
+        let newTransaction = TransactionModel(image: card.image,
+                                              name: card.name,cardID: card.id,
+                                              currency: card.currency,
+                                              category: "addedBal",
+                                              amount: Double(addBalance)!,
+                                              amountInmainCurrency: 0,
+                                              date: Date(),
+                                              rates: 0,
+                                              hide: false)
+        
         RealmService.shared.addTransaction(newTransaction)
-        DataSource.shared.forGraphical()
     }
         func deleteCard() {
                 RealmService.shared.deleteCard(self.card)

@@ -8,9 +8,22 @@
 import Foundation
 
 class TransactionSettingModel: ObservableObject {
+    private var dataSource = DataSource.shared
+
     
-    @Published var selectedCat: CategoryModel = DataSource.shared.category[0]
+    @Published var selectedCat = CategoryModel()
     @Published var addCat: CategoryModel = CategoryModel(category: "addedBal", hide: false)
+    @Published var category: [CategoryModel] = []
+
+    
+    
+    
+    func getCategory(){
+        dataSource.getGategory()
+        category = dataSource.category
+        selectedCat = category[0]
+        
+    }
     
     var transaction: TransactionModel
     @Published var text: String = ""

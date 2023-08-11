@@ -12,6 +12,8 @@ struct AuthView: View {
     
     @StateObject var viewModel = AuthViewModel()
     @State var isAuth: Bool = true
+    @AppStorage(PersistedKeys.firstLoad.rawValue) var firstLoad = true
+
     
     var body: some View {
         VStack {
@@ -46,7 +48,12 @@ struct AuthView: View {
             DataSource.shared.removeCategory()
         }
         .onAppear{
+            print(RealmService.shared.config.fileURL as Any)
             viewModel.checkFirstLoad()
+            if firstLoad{
+                DataSource.shared.addCategory()
+                firstLoad = false
+            }
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -54,7 +61,6 @@ struct AuthView: View {
         .fullScreenCover(isPresented: $viewModel.showedMainScreen) {
             NavigationView { MainView() }
         }
-        
     }
 }
 

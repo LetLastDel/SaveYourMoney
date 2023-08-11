@@ -11,6 +11,8 @@ import SwiftUI
 struct TransactionSettingView: View {
     @StateObject var viewModel: TransactionSettingModel
     @EnvironmentObject var logBookViewmodel: LogBookViewModel
+    @EnvironmentObject var mainViewModel: MainViewModel
+
     var transaction: TransactionModel
     @Environment(\.presentationMode) var presentationMode
 
@@ -32,10 +34,10 @@ struct TransactionSettingView: View {
             if transaction.category != "addedBal".localized{
                 VStack(alignment: .center){
                     Picker("", selection: $viewModel.selectedCat) {
-                        ForEach(0 ..< DataSource.shared.category.count, id: \.self) { index in
+                        ForEach(0 ..< viewModel.category.count, id: \.self) { index in
                             HStack{
-                                Text(DataSource.shared.category[index].category.localized)
-                            }.tag(DataSource.shared.category[index])
+                                Text(viewModel.category[index].category.localized)
+                            }.tag(viewModel.category[index])
                         }
                     }.pickerStyle(.wheel)
                         .frame(maxWidth: .infinity)
@@ -63,14 +65,20 @@ struct TransactionSettingView: View {
             Button("accept".localized){
                 presentationMode.wrappedValue.dismiss()
                 viewModel.changeTransaction()
-                DataSource.shared.getTransactions()
+                logBookViewmodel.getTransaction()
+                mainViewModel.getTransactions()
             }
             .modifier(ButtonCustom())
             Button("deleteTransaction".localized){
                 presentationMode.wrappedValue.dismiss()
                 viewModel.hideTrans()
+                logBookViewmodel.getTransaction()
+                mainViewModel.getTransactions()
             }
             .foregroundColor(.red.opacity(0.7))
+        }
+        .onAppear{
+            viewModel.getCategory()
         }
         .font(.custom("Marker Felt", size: 12))
         .padding()

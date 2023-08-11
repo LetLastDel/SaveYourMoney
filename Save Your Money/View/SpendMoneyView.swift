@@ -18,11 +18,11 @@ struct SpendMoneyView: View {
     var body: some View {
         VStack{
                 Picker("", selection: $viewModel.selectedCat) {
-                    ForEach(0 ..< DataSource.shared.category.count, id: \.self) { index in
+                    ForEach(0 ..< viewModel.category.count, id: \.self) { index in
                         HStack{
-                            Text("\(DataSource.shared.category[index].category)".localized)
+                            Text("\(viewModel.category[index].category)".localized)
                                 .font(.custom("Marker Felt", size: 12))
-                        }.tag(DataSource.shared.category[index])
+                        }.tag(viewModel.category[index])
                     }
                 }.pickerStyle(.wheel)
                     .frame(maxWidth: .infinity)
@@ -31,20 +31,20 @@ struct SpendMoneyView: View {
                 ScrollView(.horizontal) {
                     HStack{
                         Picker("", selection: $viewModel.selectedCard){
-                            ForEach( 0 ..< DataSource.shared.card.count, id: \.self) { index in
+                            ForEach( 0 ..< viewModel.card.count, id: \.self) { index in
                                 HStack(alignment: .center){
-                                    Image(DataSource.shared.card[index].image)
+                                    Image(viewModel.card[index].image)
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 50, height: 60)
                                         .shadow(color: Color("blacked"), radius: 0, x: 6, y: 6)
-                                    Text(DataSource.shared.card[index].name)
+                                    Text(viewModel.card[index].name)
                                         .font(.custom("Marker Felt", size: 12))
-                                    Text("\(String(DataSource.shared.card[index].balance))")
+                                    Text("\(String(viewModel.card[index].balance))")
                                         .font(.custom("Marker Felt", size: 12))
-                                    Text(String(DataSource.shared.card[index].currency))
+                                    Text(String(viewModel.card[index].currency))
                                         .font(.custom("Marker Felt", size: 12))
-                                }.tag(DataSource.shared.card[index])
+                                }.tag(viewModel.card[index])
                             }
                         }
                         .font(.custom("Marker Felt", size: 12))
@@ -85,15 +85,12 @@ struct SpendMoneyView: View {
                     viewModel.spendMoney()
                     viewModel.addTransaction()
                     mainViewModel.getCards()
-                    DataSource.shared.getTransactions()
+                    mainViewModel.getTransactions()
                     presentationMode.wrappedValue.dismiss()
                 }
                 .modifier(ButtonCustom(width: 360, foregroundColor: .black))
             }
             .font(.custom("Marker Felt", size: 12))
-            .onAppear{
-                viewModel.rateRequest()
-            }
             .onChange(of: viewModel.selectedCard, perform: { newValue in
                 viewModel.rateRequest()
             })

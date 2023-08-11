@@ -10,10 +10,6 @@ import SwiftUI
 
 class AuthViewModel: ObservableObject {
     
-    
-    @Published var login: String = ""
-    @Published var password: String = ""
-    @Published var repeatPassword: String = ""
     @Published var selectedPicker: String = ""
     @AppStorage(PersistedKeys.first.rawValue) var first = true
     @Published var showedMainScreen = false

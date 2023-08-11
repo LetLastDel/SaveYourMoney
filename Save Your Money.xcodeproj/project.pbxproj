@@ -144,13 +144,13 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
-		2E81EC932A150E8D00420B2A /* HeadAppController */ = {
+		2E81EC932A150E8D00420B2A /* DataSource */ = {
 			isa = PBXGroup;
 			children = (
 				2E9C58EA29F3FA5A002DF696 /* DataSource.swift */,
 				2E89DF3A2A0FF1ED00C0F998 /* PersistedKeys.swift */,
 			);
-			path = HeadAppController;
+			path = DataSource;
 			sourceTree = "<group>";
 		};
 		2E89DF392A0FF1D100C0F998 /* NetworkService */ = {
@@ -183,7 +183,7 @@
 			children = (
 				2EA2C62029E81613008AD591 /* Save_Your_MoneyApp.swift */,
 				2EA2C62429E81614008AD591 /* Assets.xcassets */,
-				2E81EC932A150E8D00420B2A /* HeadAppController */,
+				2E81EC932A150E8D00420B2A /* DataSource */,
 				2EC58DF529F050E7001D7CC6 /* Model */,
 				2E39080C29EBFB1E000DAB40 /* View */,
 				2E39081129EBFB6E000DAB40 /* ViewModel */,
